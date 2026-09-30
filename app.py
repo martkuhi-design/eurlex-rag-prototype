@@ -68,45 +68,45 @@ if question:
             f"similarity: {result['similarity']:.4f}"
         )
 
-# Take the 3 most relevant articles
-top_results = semantic_results[:3]
+        # Take the 3 most relevant articles
+        top_results = semantic_results[:3]
 
-# Combine their texts into one context for the language model
-context = "\n\n".join(
-    f"ARTICLE {item['article']}\n{item['text']}"
-    for item in top_results
-)
+        # Combine their texts into one context for the language model
+        context = "\n\n".join(
+            f"ARTICLE {item['article']}\n{item['text']}"
+            for item in top_results
+        )
 
-st.subheader("Retrieved context")
+        st.subheader("Retrieved context")
 
-with st.expander("Show retrieved article text"):
-    st.text(context)
+        with st.expander("Show retrieved article text"):
+            st.text(context)
 
-# Ask the language model to answer using only the retrieved context
-prompt = f"""
-You are an assistant answering questions about Directive (EU) 2018/1972.
+        # Ask the language model to answer using only the retrieved context
+        prompt = f"""
+        You are an assistant answering questions about Directive (EU) 2018/1972.
 
-Answer the user's question using only the context provided below.
+        Answer the user's question using only the context provided below.
 
-Rules:
-- Do not use information outside the provided context.
-- Cite the relevant Article number(s) in your answer.
-- If the context does not contain enough information to answer the question, say so clearly.
-- Give a concise and clear answer.
+        Rules:
+        - Do not use information outside the provided context.
+        - Cite the relevant Article number(s) in your answer.
+        - If the context does not contain enough information to answer the question, say so clearly.
+        - Give a concise and clear answer.
 
-USER QUESTION:
-{question}
+        USER QUESTION:
+        {question}
 
-CONTEXT:
-{context}
-"""
+        CONTEXT:
+        {context}
+        """
 
-response = client.responses.create(
-    model="gpt-5.4-mini",
-    input=prompt
-)
+        response = client.responses.create(
+            model="gpt-5.6-luna",
+            input=prompt
+        )
 
-answer = response.output_text
+        answer = response.output_text
 
-st.subheader("Answer")
-st.write(answer)
+        st.subheader("Answer")
+        st.write(answer)
